@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - DB_TYPE=sqlite
+      - DB_PATH=/app/data/rss_data.db
+      - FASTAPI_RSS_PORT=8000
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      redis:
+        condition: service_healthy
+    command: ["/docker-entrypoint.sh", "--app"]
+
+  worker:
+    build: .
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - DB_TYPE=sqlite
+      - DB_PATH=/app/data/rss_data.db
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      redis:
+        condition: service_healthy
+    command: ["/docker-entrypoint.sh", "--worker"]
+
+  beat:
+    build: .
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - DB_TYPE=sqlite
+      - DB_PATH=/app/data/rss_data.db
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      redis:
+        condition: service_healthy
+    command: ["/docker-entrypoint.sh", "--beat"]
+
+volumes:
+  redis_data:
