@@ -22,11 +22,27 @@ services:
       - FASTAPI_RSS_PORT=8000
     volumes:
       - ./data:/app/data
+      - ./app:/app/app
     depends_on:
       redis:
         condition: service_healthy
-    command: ["/docker-entrypoint.sh", "--app"]
-    # 前端已集成在 app 服务中（通过 Dockerfile 构建）
+    command: ["/docker-entrypoint.sh", "--dev"]
+
+  frontend:
+    image: node:20-alpine
+    working_dir: /app
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - ./docker-entrypoint-frontend.sh:/docker-entrypoint-frontend.sh:ro
+      - /app/node_modules
+    command: ["/docker-entrypoint-frontend.sh"]
+    environment:
+      - VITE_API_BASE_URL=http://app:8000
+      - API_BASE_URL=http://app:8000
+    depends_on:
+      - app
 
   worker:
     build: .
@@ -36,6 +52,7 @@ services:
       - DB_PATH=/app/data/rss_data.db
     volumes:
       - ./data:/app/data
+      - ./worker:/app/worker
     depends_on:
       redis:
         condition: service_healthy
