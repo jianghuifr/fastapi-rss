@@ -1,7 +1,7 @@
 [project]
 name = "fastapi-rss"
 version = "0.1.0"
-description = "RSS订阅服务端，支持定时轮询更新"
+description = "RSS Reader"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
@@ -14,4 +14,17 @@ dependencies = [
     "redis>=5.2.0",
     "pydantic>=2.9.0",
     "httpx>=0.27.2",
+    "python-multipart>=0.0.9",
+    "sqladmin>=0.19.0",
+    "passlib[bcrypt]>=1.7.4",
+    "bcrypt>=4.0.0,<5.0.0",
+    "python-jose[cryptography]>=3.3.0",
+    "itsdangerous>=2.1.2",
+    "loguru>=0.7.2",
 ]
+
+[tool.uv]
+index-url = "https://mirrors.aliyun.com/pypi/simple/"
+
+[tool.uv.pip]
+index-url = "https://mirrors.aliyun.com/pypi/simple/"

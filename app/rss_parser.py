@@ -5,6 +5,7 @@ from datetime import datetime
 from typing import Optional, Dict, List
 from sqlalchemy.orm import Session
 from app.database import RSSFeed, RSSItem, db
+from loguru import logger
 
 
 def parse_date(date_tuple: Optional[tuple]) -> Optional[datetime]:
@@ -31,7 +32,7 @@ async def fetch_rss_feed(url: str) -> Optional[feedparser.FeedParserDict]:
                 raise Exception(f"RSS解析错误: {feed.bozo_exception}")
             return feed
     except Exception as e:
-        print(f"获取RSS源失败 {url}: {e}")
+        logger.error(f"获取RSS源失败 {url}: {e}")
         return None
 
 
@@ -90,7 +91,7 @@ async def update_feed(session: Session, feed_url: str) -> Optional[RSSFeed]:
         new_items_count += 1
 
     session.commit()
-    print(f"RSS源 {feed_url} 更新完成，新增 {new_items_count} 条条目")
+    logger.info(f"RSS源 {feed_url} 更新完成，新增 {new_items_count} 条条目")
     return feed_record
 
 
@@ -109,7 +110,7 @@ async def update_all_feeds():
         try:
             await update_feed(session, feed_url)
         except Exception as e:
-            print(f"更新RSS源 {feed_url} 时出错: {e}")
+            logger.error(f"更新RSS源 {feed_url} 时出错: {e}")
             session.rollback()
         finally:
             session.close()

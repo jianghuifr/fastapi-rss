@@ -28,7 +28,8 @@ COPY app ./app
 COPY worker ./worker
 
 # 安装依赖
-RUN pip install uv && uv sync --frozen --no-install-project
+COPY --from=ghcr.io/astral-sh/uv:python3.13-alpine /usr/local/bin/uv /usr/local/bin/uvx /usr/local/bin/
+RUN uv sync --frozen --no-install-project
 
 # 从前端构建阶段复制构建产物
 COPY --from=frontend-builder /frontend/dist ./frontend/dist
@@ -36,8 +37,5 @@ COPY --from=frontend-builder /frontend/dist ./frontend/dist
 # 复制启动脚本
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
-
-# 创建数据目录
-RUN mkdir -p /app/data
 
 CMD ["/docker-entrypoint.sh", "--app"]

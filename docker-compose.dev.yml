@@ -1,8 +1,7 @@
 services:
   redis:
     image: redis:7-alpine
-    ports:
-      - "6379:6379"
+    network_mode: host
     volumes:
       - redis_data:/data
     healthcheck:
@@ -13,13 +12,18 @@ services:
 
   app:
     build: .
-    ports:
-      - "8000:8000"
+    network_mode: host
     environment:
-      - REDIS_URL=redis://redis:6379/0
+      - REDIS_URL=redis://localhost:6379/0
       - DB_TYPE=sqlite
-      - DB_PATH=/app/data/rss_data.db
+      - DB_PATH=/app/data/rss.db
       - FASTAPI_RSS_PORT=8000
+      - AI_API_TOKEN=${AI_API_TOKEN:-}
+      - AI_API_BASE_URL=${AI_API_BASE_URL:-https://api.deepseek.com/v1}
+      - AI_MODEL=${AI_MODEL:-deepseek-chat}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-change-this-secret-key-in-production}
+      - ADMIN_USERNAME=${ADMIN_USERNAME:-admin}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin123}
     volumes:
       - ./data:/app/data
       - ./app:/app/app
@@ -27,29 +31,53 @@ services:
       redis:
         condition: service_healthy
     command: ["/docker-entrypoint.sh", "--dev"]
+    develop:
+      watch:
+        - action: sync
+          path: ./app
+          target: /app/app
+        - action: sync
+          path: ./pyproject.toml
+          target: /app/pyproject.toml
+        - action: rebuild
+          path: ./Dockerfile
+        - action: rebuild
+          path: ./docker-entrypoint.sh
 
   frontend:
     image: node:20-alpine
     working_dir: /app
-    ports:
-      - "5173:5173"
+    network_mode: host
     volumes:
       - ./frontend:/app
       - ./docker-entrypoint-frontend.sh:/docker-entrypoint-frontend.sh:ro
       - /app/node_modules
     command: ["/docker-entrypoint-frontend.sh"]
     environment:
-      - VITE_API_BASE_URL=http://app:8000
-      - API_BASE_URL=http://app:8000
+      - VITE_API_BASE_URL=http://localhost:8000
+      - API_BASE_URL=http://localhost:8000
     depends_on:
       - app
+    develop:
+      watch:
+        - action: sync
+          path: ./frontend
+          target: /app
+          ignore:
+            - node_modules/
+            - dist/
+            - .git/
+        - action: sync
+          path: ./docker-entrypoint-frontend.sh
+          target: /docker-entrypoint-frontend.sh
 
   worker:
     build: .
+    network_mode: host
     environment:
-      - REDIS_URL=redis://redis:6379/0
+      - REDIS_URL=redis://localhost:6379/0
       - DB_TYPE=sqlite
-      - DB_PATH=/app/data/rss_data.db
+      - DB_PATH=/app/data/rss.db
     volumes:
       - ./data:/app/data
       - ./worker:/app/worker
@@ -57,13 +85,26 @@ services:
       redis:
         condition: service_healthy
     command: ["/docker-entrypoint.sh", "--worker"]
+    develop:
+      watch:
+        - action: sync
+          path: ./worker
+          target: /app/worker
+        - action: sync
+          path: ./app
+          target: /app/app
+        - action: rebuild
+          path: ./Dockerfile
+        - action: rebuild
+          path: ./docker-entrypoint.sh
 
   beat:
     build: .
+    network_mode: host
     environment:
-      - REDIS_URL=redis://redis:6379/0
+      - REDIS_URL=redis://localhost:6379/0
       - DB_TYPE=sqlite
-      - DB_PATH=/app/data/rss_data.db
+      - DB_PATH=/app/data/rss.db
     volumes:
       - ./data:/app/data
     depends_on:

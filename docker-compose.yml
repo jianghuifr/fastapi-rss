@@ -18,8 +18,14 @@ services:
     environment:
       - REDIS_URL=redis://redis:6379/0
       - DB_TYPE=sqlite
-      - DB_PATH=/app/data/rss_data.db
+      - DB_PATH=/app/data/rss.db
       - FASTAPI_RSS_PORT=8000
+      - AI_API_TOKEN=${AI_API_TOKEN:-}
+      - AI_API_BASE_URL=${AI_API_BASE_URL:-https://api.deepseek.com/v1}
+      - AI_MODEL=${AI_MODEL:-deepseek-chat}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-change-this-secret-key-in-production}
+      - ADMIN_USERNAME=${ADMIN_USERNAME:-admin}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin123}
     volumes:
       - ./data:/app/data
     depends_on:
@@ -33,7 +39,7 @@ services:
     environment:
       - REDIS_URL=redis://redis:6379/0
       - DB_TYPE=sqlite
-      - DB_PATH=/app/data/rss_data.db
+      - DB_PATH=/app/data/rss.db
     volumes:
       - ./data:/app/data
     depends_on:
@@ -46,7 +52,7 @@ services:
     environment:
       - REDIS_URL=redis://redis:6379/0
       - DB_TYPE=sqlite
-      - DB_PATH=/app/data/rss_data.db
+      - DB_PATH=/app/data/rss.db
     volumes:
       - ./data:/app/data
     depends_on:

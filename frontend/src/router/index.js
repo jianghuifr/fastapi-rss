@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Admin from '../views/Admin.vue'
 import Reader from '../views/Reader.vue'
 
 const routes = [
@@ -8,14 +7,10 @@ const routes = [
     redirect: '/reader'
   },
   {
-    path: '/admin',
-    name: 'Admin',
-    component: Admin
-  },
-  {
     path: '/reader',
     name: 'Reader',
-    component: Reader
+    component: Reader,
+    props: (route) => ({ feedId: route.query.feed_id ? parseInt(route.query.feed_id) : null })
   }
 ]
 

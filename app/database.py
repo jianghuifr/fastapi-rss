@@ -1,11 +1,26 @@
 """数据库连接和模型定义"""
 import os
-from sqlalchemy import create_engine, Column, String, DateTime, Text, Integer
+from sqlalchemy import create_engine, Column, String, DateTime, Text, Integer, Boolean
 from sqlalchemy.orm import declarative_base, sessionmaker
 from datetime import datetime
 from pathlib import Path
+from loguru import logger
 
 Base = declarative_base()
+
+
+class User(Base):
+    """用户表（用于管理面板认证）"""
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    username = Column(String, unique=True, nullable=False, index=True)
+    email = Column(String, unique=True, nullable=True, index=True)
+    hashed_password = Column(String, nullable=False)
+    is_active = Column(Boolean, default=True)
+    is_superuser = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
 
 class RSSFeed(Base):
@@ -31,6 +46,7 @@ class RSSItem(Base):
     title = Column(String)
     link = Column(String, unique=True, nullable=False, index=True)
     description = Column(Text)
+    ai_summary = Column(Text)  # AI 总结
     published = Column(DateTime)
     author = Column(String)
     created_at = Column(DateTime, default=datetime.utcnow)
@@ -44,20 +60,20 @@ class Database:
             # 默认使用 SQLite，也可以使用 DuckDB
             db_type = os.getenv("DB_TYPE", "sqlite").lower()
             if db_type == "duckdb":
-                db_path = os.getenv("DB_PATH", "rss_data.duckdb")
+                db_path = os.getenv("DB_PATH", "data/rss.duckdb")
                 # DuckDB 需要 duckdb-engine 包
                 try:
                     self.engine = create_engine(f"duckdb:///{db_path}")
                 except Exception:
                     # 如果 duckdb-engine 不可用，回退到 SQLite
-                    print("警告: DuckDB 引擎不可用，使用 SQLite")
-                    db_path = os.getenv("DB_PATH", "rss_data.db")
+                    logger.warning("DuckDB 引擎不可用，使用 SQLite")
+                    db_path = os.getenv("DB_PATH", "data/rss.db")
                     self.engine = create_engine(
                         f"sqlite:///{db_path}",
                         connect_args={"check_same_thread": False}
                     )
             else:
-                db_path = os.getenv("DB_PATH", "rss_data.db")
+                db_path = os.getenv("DB_PATH", "data/rss.db")
                 self.engine = create_engine(
                     f"sqlite:///{db_path}",
                     connect_args={"check_same_thread": False}
