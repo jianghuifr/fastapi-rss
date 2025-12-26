@@ -1,0 +1,24 @@
+<svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="800.000000" height="800.000000" viewBox="0 0 800.000000 800.000000" preserveAspectRatio="xMidYMid meet">
+  <style>
+    /* 默认样式（浅色主题或不支持媒体查询时） */
+    .icon-fill { fill: #000000; }
+    /* 深色主题 */
+    @media (prefers-color-scheme: dark) {
+      .icon-fill { fill: #ffffff; }
+    }
+    /* 浅色主题（明确指定） */
+    @media (prefers-color-scheme: light) {
+      .icon-fill { fill: #000000; }
+    }
+  </style>
+  <metadata>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <rdf:Description dc:format="image/svg+xml" dc:Label="1" dc:ContentProducer="001191330110MACRLGPT8B00000" dc:ProduceID="342229785" dc:ReservedCode1="WRfxC0Pgq8xmzMgO4pLdElwgRZ+41cu+mB4TKd9WH4A=" dc:ContentPropagator="001191330110MACRLGPT8B00000" dc:PropagateID="342229785" dc:ReservedCode2="WRfxC0Pgq8xmzMgO4pLdElwgRZ+41cu+mB4TKd9WH4A="/>
+    </rdf:RDF>
+  </metadata>
+  <g transform="translate(0.000000,800.000000) scale(0.100000,-0.100000)" class="icon-fill" stroke="none">
+    <path d="M2595 5984 c-29 -31 -31 -62 -10 -104 18 -35 21 -36 160 -50 540 -56 1062 -239 1505 -529 325 -212 634 -527 833 -849 32 -52 89 -155 127 -230 204 -406 307 -791 339 -1259 6 -79 15 -152 21 -163 26 -48 88 -53 132 -10 l30 31 -7 102 c-18 278 -46 466 -105 692 -69 268 -133 438 -261 695 -285 571 -706 993 -1312 1314 -350 186 -840 333 -1257 376 -149 15 -167 14 -195 -16z"/>
+    <path d="M2596 4567 c-18 -18 -26 -37 -26 -62 0 -72 24 -86 164 -100 172 -17 407 -92 594 -190 276 -144 493 -363 638 -644 108 -208 167 -426 190 -700 8 -102 30 -135 89 -135 29 0 43 7 63 29 24 28 24 32 18 124 -27 383 -150 731 -354 1006 -101 136 -282 303 -438 405 -221 145 -563 261 -841 286 -67 6 -73 5 -97 -19z"/>
+    <path d="M2057 3410 c-88 -15 -158 -74 -205 -170 l-27 -55 0 -445 0 -445 28 -57 c34 -69 91 -121 165 -148 53 -20 72 -21 476 -18 405 3 423 4 466 24 53 25 114 84 141 137 33 64 41 185 37 574 -4 321 -6 374 -22 415 -25 66 -86 132 -154 165 l-57 28 -400 2 c-220 1 -422 -3 -448 -7z m840 -190 c63 -38 63 -38 63 -475 0 -431 -2 -446 -56 -482 -26 -17 -57 -18 -425 -18 -388 0 -398 1 -426 21 -51 38 -52 41 -54 474 -2 360 0 409 15 438 32 61 31 61 461 62 370 0 392 -1 422 -20z"/>
+  </g>
+</svg>

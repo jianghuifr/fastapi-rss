@@ -157,7 +157,7 @@ async def _add_ai_summaries(items: List[RSSItem], session: Session) -> List[RSSI
             logger.debug(f"使用数据库中已有的 AI 总结（条目 {item.id}）")
             return RSSItemResponse(**item_dict)
 
-        # 如果没有，生成新的 AI 总结
+        # 如果没有，生成新的 AI 总结（用于旧的item或生成失败的情况）
         if item.link:
             try:
                 summary = await ai_summary_service.summarize(

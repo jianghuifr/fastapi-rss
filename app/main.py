@@ -130,11 +130,24 @@ def startup_event():
 # 静态文件服务（前端构建后的文件）
 # 注意：这个 catch-all 路由必须在最后注册，避免拦截管理面板路由
 frontend_dist = Path(__file__).parent.parent / "frontend" / "dist"
+frontend_src = Path(__file__).parent.parent / "frontend"
 if frontend_dist.exists():
     # 静态资源文件
     assets_dir = frontend_dist / "assets"
     if assets_dir.exists():
         app.mount("/assets", StaticFiles(directory=str(assets_dir)), name="assets")
+
+    # Favicon 路由（优先从构建目录查找，如果不存在则从源码目录查找）
+    @app.get("/favicon.svg")
+    async def favicon():
+        """Favicon图标"""
+        favicon_path = frontend_dist / "favicon.svg"
+        if not favicon_path.exists():
+            favicon_path = frontend_src / "favicon.svg"
+        if favicon_path.exists():
+            return FileResponse(str(favicon_path), media_type="image/svg+xml")
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail="Favicon not found")
 
     # 服务前端页面（SPA路由）
     # 注意：FastAPI 的路由匹配机制中，catch-all 路由会匹配所有路径

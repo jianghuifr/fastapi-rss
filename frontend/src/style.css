@@ -26,6 +26,29 @@
     --radius: 0.5rem;
   }
 
+  .dark {
+    /* OneDark Pro 风格配色 - RGB(21, 21, 23) 背景 */
+    --background: 240 5% 9%; /* RGB(21, 21, 23) - 主背景 */
+    --foreground: 220 13% 71%; /* #abb2bf - 主文本 */
+    --card: 240 5% 11%; /* 卡片背景，稍亮于主背景 */
+    --card-foreground: 220 13% 71%;
+    --popover: 240 5% 11%;
+    --popover-foreground: 220 13% 71%;
+    --primary: 207 82% 66%; /* #61afef - OneDark Pro 蓝色 */
+    --primary-foreground: 240 5% 9%;
+    --secondary: 240 5% 15%; /* 次要元素背景 */
+    --secondary-foreground: 220 13% 71%;
+    --muted: 240 5% 15%;
+    --muted-foreground: 220 10% 55%; /* 静音文本 */
+    --accent: 240 5% 15%;
+    --accent-foreground: 220 13% 71%;
+    --destructive: 0 65% 58%; /* 红色，保持可见 */
+    --destructive-foreground: 240 5% 9%;
+    --border: 240 5% 18%; /* 边框颜色 */
+    --input: 240 5% 18%;
+    --ring: 207 82% 66%; /* 焦点环颜色 */
+  }
+
   * {
     @apply border-border;
   }
