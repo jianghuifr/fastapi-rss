@@ -42,6 +42,8 @@ services:
       - DB_PATH=/app/data/rss.db
     volumes:
       - ./data:/app/data
+    mem_limit: "${WORKER_MEM_LIMIT:-512m}"
+    restart: on-failure
     depends_on:
       redis:
         condition: service_healthy

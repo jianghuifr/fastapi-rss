@@ -81,6 +81,8 @@ services:
     volumes:
       - ./data:/app/data
       - ./worker:/app/worker
+    mem_limit: "${WORKER_MEM_LIMIT:-512m}"
+    restart: on-failure
     depends_on:
       redis:
         condition: service_healthy
